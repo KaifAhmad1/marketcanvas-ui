@@ -1,0 +1,5 @@
+reflex==0.6.0
+# Optional for production deployment
+# gunicorn==23.0.0
+# Optional for file uploads (if implementing actual uploads)
+# python-multipart==0.0.12
