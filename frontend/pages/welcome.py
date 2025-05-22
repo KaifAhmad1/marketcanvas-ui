@@ -3,6 +3,12 @@ import reflex as rx
 from ..components.ui_components import primary_button, card
 from ..state.canvas_state import CanvasState # Make sure CanvasState is imported
 
+# Helper function to format the date string
+def format_date_for_display(date_string: str) -> str:
+    if date_string and isinstance(date_string, str):
+        return date_string[:10]
+    return "N/A" # Or return date_string to see what it is if not a string
+
 def welcome():
     return rx.vstack(
         # Hero Section
@@ -100,16 +106,10 @@ def welcome():
                                 ),
                                 rx.text(project.get("name", "Untitled"),
                                        class_name="text-white font-bold"),
-                                # CORRECTED: Use rx.let to resolve the Var to a Python string for slicing
-                                rx.let(
-                                    # Bind the Var project.get('updated_at', '') to python_date_str
-                                    python_date_str=project.get('updated_at', '') 
-                                )( 
-                                    # Inside this lambda, python_date_str is a Python string
-                                    lambda python_date_str_resolved: rx.text( 
-                                        f"Updated {python_date_str_resolved[:10]}",
-                                        color_scheme="gray", class_name="text-xs mt-1"
-                                    )
+                                # CORRECTED: Use a helper Python function for formatting
+                                rx.text(
+                                    f"Updated {format_date_for_display(project.get('updated_at', ''))}",
+                                    color_scheme="gray", class_name="text-xs mt-1"
                                 ),
                                 primary_button(
                                     "Open",
