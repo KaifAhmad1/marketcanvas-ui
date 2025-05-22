@@ -1,37 +1,27 @@
 ```
-marketcanvas-ui/
+ai-visual-generator/
+├── .web/                  # Reflex build directory (auto-generated)
+├── assets/
+│   └── main.css
 ├── frontend/
-│   ├── assets/
-│   │   ├── logo.png
-│   │   ├── logo-dark.png
+│   ├── __init__.py        # Optional, but good practice
 │   ├── components/
+│   │   ├── __init__.py    # Optional
+│   │   ├── enhanced_canvas.py
 │   │   ├── reactflow.py
-│   │   ├── canvas_components.py
-│   │   ├── nodes.py
-│   │   ├── property_panel.py
-│   │   ├── preview_panel.py
-│   │   ├── style_tone_editor.py
-│   │   ├── llm_selector.py
-│   │   ├── tutorial_manager.py
-│   │   ├── ab_testing.py
-│   │   ├── collaboration.py
-│   │   ├── template_selector.py
-│   │   ├── analytics_dashboard.py
-│   │   ├── theme_builder.py      # New: Theme customization component
-│   │   ├── ui_components.py
+│   │   └── ui_components.py
 │   ├── pages/
+│   │   ├── __init__.py    # Optional
 │   │   ├── editor.py
-│   │   ├── welcome.py
+│   │   ├── gallery.py
+│   │   ├── settings.py
+│   │   ├── templates.py
+│   │   └── welcome.py
 │   ├── state/
-│   │   ├── app_state.py
-│   │   ├── canvas_state.py
-│   ├── styles/
-│   │   ├── main.css             # Enhanced with animations
-│   │   ├── canvas.css           # Enhanced with node animations
-│   │   ├── themes.py            # Enhanced with dynamic themes
-│   ├── tutorials/
-│   │   ├── basic_workflow.json  # Enhanced tutorial steps
-│   │   ├── advanced_workflow.json # Enhanced tutorial steps
-│   ├── frontend.py
-├── rxconfig.py
+│   │   ├── __init__.py    # Optional
+│   │   └── canvas_state.py
+│   └── frontend.py
+├── README.md
+├── requirements.txt
+└── rxconfig.py
 ```
