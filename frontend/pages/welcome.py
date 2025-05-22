@@ -16,14 +16,14 @@ def welcome():
                 ),
                 rx.text(
                     "Create stunning visuals with AI-powered node-based workflows",
-                    color="gray.300", # Using direct color string for Tailwind
+                    color="gray.300",
                     text_align="center",
                     class_name="max-w-2xl text-lg md:text-xl"
                 ),
                 rx.hstack(
                     primary_button("Start Creating", lambda: rx.redirect("/editor"), "plus", variant="primary"),
                     primary_button("View Templates", lambda: rx.redirect("/templates"), "layout-template", variant="outline"),
-                    primary_button("Tutorial", CanvasState.start_tutorial, "play", variant="secondary"), # Corrected icon
+                    primary_button("Tutorial", CanvasState.start_tutorial, "play", variant="secondary"),
                     spacing="4",
                     class_name="mt-6"
                 ),
@@ -85,7 +85,7 @@ def welcome():
 
         # Recent Projects (if any)
         rx.cond(
-            CanvasState.has_saved_projects, # CORRECTED: Use the computed var
+            CanvasState.has_saved_projects,
             rx.box(
                 rx.vstack(
                     rx.heading("Recent Projects", class_name="text-3xl md:text-4xl font-bold text-white"),
@@ -94,16 +94,15 @@ def welcome():
                             CanvasState.saved_projects[:6],
                             lambda project, index: card([
                                 rx.image(
-                                    src=project.get("preview_image", "/placeholder/200/150.svg"), # Using .svg placeholder
+                                    src=project.get("preview_image", "/placeholder/200/150.svg"),
                                     class_name="w-full h-32 object-cover rounded mb-3"
                                 ),
                                 rx.text(project.get("name", "Untitled"),
                                        class_name="text-white font-bold"),
+                                # CORRECTED: Pass parts as separate arguments to rx.text
                                 rx.text(
-                                    rx.text.concat(
-                                        "Updated ",
-                                        project.get('updated_at', '').to_string().slice(0, 10)
-                                    ),
+                                    "Updated ", # First argument (string)
+                                    project.get('updated_at', '').to_string().slice(0, 10), # Second argument (Var)
                                     color_scheme="gray", class_name="text-xs mt-1"
                                 ),
                                 primary_button(
@@ -126,7 +125,7 @@ def welcome():
                 ),
                 class_name="py-16 px-8"
             ),
-            rx.box() # Else case for the rx.cond
+            rx.box()
         ),
 
         class_name="min-h-screen bg-gray-900",
