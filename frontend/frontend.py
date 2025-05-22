@@ -1,7 +1,9 @@
 import reflex as rx
 from .pages.editor import editor
 from .pages.welcome import welcome
-from .styles.themes import apply_theme
+from .pages.gallery import gallery
+from .pages.templates import templates
+from .pages.settings import settings
 
 app = rx.App(
     theme=rx.theme(
@@ -11,12 +13,13 @@ app = rx.App(
     ),
     stylesheets=[
         "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css",
-        "https://cdn.jsdelivr.net/npm/react-color@2.19.3/dist/react-color.min.css",
-        "https://cdn.jsdelivr.net/npm/react-hot-toast@2.4.1/dist/react-hot-toast.min.css",
-        "/static/css/main.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css",
+        "/assets/main.css",
     ],
 )
 
 app.add_page(welcome, route="/")
 app.add_page(editor, route="/editor")
-app.add_custom_component(apply_theme)
+app.add_page(gallery, route="/gallery")
+app.add_page(templates, route="/templates")
+app.add_page(settings, route="/settings")
