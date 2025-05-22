@@ -1,5 +1,7 @@
-reflex==0.7.12
-# Optional for production deployment
-# gunicorn==23.0.0
-# Optional for file uploads (if implementing actual uploads)
-# python-multipart==0.0.12
+# requirements.txt
+reflex>=0.4.0
+python-multipart
+pillow
+requests
+aiofiles
+uvicorn
