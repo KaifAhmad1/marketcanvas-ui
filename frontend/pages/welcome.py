@@ -34,6 +34,7 @@ def welcome():
         ),
 
         # Features Section
+        # ... (rest of the features section is fine) ...
         rx.box(
             rx.vstack(
                 rx.heading("Features", class_name="text-3xl md:text-4xl font-bold text-white text-center"),
@@ -99,11 +100,16 @@ def welcome():
                                 ),
                                 rx.text(project.get("name", "Untitled"),
                                        class_name="text-white font-bold"),
-                                # CORRECTED: Pass parts as separate arguments to rx.text
-                                rx.text(
-                                    "Updated ", # First argument (string)
-                                    project.get('updated_at', '').to_string().slice(0, 10), # Second argument (Var)
-                                    color_scheme="gray", class_name="text-xs mt-1"
+                                # CORRECTED: Use rx.let to resolve the Var to a Python string for slicing
+                                rx.let(
+                                    # Bind the Var project.get('updated_at', '') to python_date_str
+                                    python_date_str=project.get('updated_at', '') 
+                                )( 
+                                    # Inside this lambda, python_date_str is a Python string
+                                    lambda python_date_str_resolved: rx.text( 
+                                        f"Updated {python_date_str_resolved[:10]}",
+                                        color_scheme="gray", class_name="text-xs mt-1"
+                                    )
                                 ),
                                 primary_button(
                                     "Open",
