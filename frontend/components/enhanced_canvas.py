@@ -1,6 +1,7 @@
 # frontend/components/enhanced_canvas.py
 import reflex as rx
 from .reactflow import react_flow, background, controls, mini_map
+from typing import Dict, Any, List, Optional
 from .ui_components import primary_button, icon_button, card, sidebar_panel
 from ..state.canvas_state import CanvasState
 
