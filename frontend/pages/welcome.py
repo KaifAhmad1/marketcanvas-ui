@@ -3,11 +3,17 @@ import reflex as rx
 from ..components.ui_components import primary_button, card
 from ..state.canvas_state import CanvasState # Make sure CanvasState is imported
 
-# Helper function to format the date string
-def format_date_for_display(date_string: str) -> str:
-    if date_string and isinstance(date_string, str):
-        return date_string[:10]
-    return "N/A" # Or return date_string to see what it is if not a string
+# Helper function to format the date string Var for display
+def format_date_var_for_display(date_string_var: rx.Var[str]) -> rx.Var[str]:
+    # We can't directly use Python's `if` on a Var for its truthiness.
+    # We'll use rx.cond to return the sliced string or a default.
+    # This whole expression will be translated to JS by Reflex.
+    return rx.cond(
+        date_string_var != "", # Check if the Var (representing a string) is not empty
+        date_string_var.to_string().slice(0, 10), # If not empty, slice it
+        "N/A"  # If empty or None (rx.cond handles Var's None-like states)
+    )
+
 
 def welcome():
     return rx.vstack(
@@ -40,7 +46,6 @@ def welcome():
         ),
 
         # Features Section
-        # ... (rest of the features section is fine) ...
         rx.box(
             rx.vstack(
                 rx.heading("Features", class_name="text-3xl md:text-4xl font-bold text-white text-center"),
@@ -106,9 +111,10 @@ def welcome():
                                 ),
                                 rx.text(project.get("name", "Untitled"),
                                        class_name="text-white font-bold"),
-                                # CORRECTED: Use a helper Python function for formatting
+                                # CORRECTED: Pass the Var to the helper, which returns a Var
                                 rx.text(
-                                    f"Updated {format_date_for_display(project.get('updated_at', ''))}",
+                                    "Updated ",
+                                    format_date_var_for_display(project.get('updated_at', '')),
                                     color_scheme="gray", class_name="text-xs mt-1"
                                 ),
                                 primary_button(
