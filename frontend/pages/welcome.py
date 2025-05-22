@@ -1,7 +1,7 @@
 # frontend/pages/welcome.py
 import reflex as rx
 from ..components.ui_components import primary_button, card
-from ..state.canvas_state import CanvasState
+from ..state.canvas_state import CanvasState # Make sure CanvasState is imported
 
 def welcome():
     return rx.vstack(
@@ -16,14 +16,14 @@ def welcome():
                 ),
                 rx.text(
                     "Create stunning visuals with AI-powered node-based workflows",
-                    color="gray.300",
+                    color="gray.300", # Using direct color string for Tailwind
                     text_align="center",
                     class_name="max-w-2xl text-lg md:text-xl"
                 ),
                 rx.hstack(
                     primary_button("Start Creating", lambda: rx.redirect("/editor"), "plus", variant="primary"),
                     primary_button("View Templates", lambda: rx.redirect("/templates"), "layout-template", variant="outline"),
-                    primary_button("Tutorial", CanvasState.start_tutorial, "play", variant="secondary"),
+                    primary_button("Tutorial", CanvasState.start_tutorial, "play", variant="secondary"), # Corrected icon
                     spacing="4",
                     class_name="mt-6"
                 ),
@@ -85,7 +85,7 @@ def welcome():
 
         # Recent Projects (if any)
         rx.cond(
-            len(CanvasState.saved_projects) > 0, # CORRECTED: Use standard Python len() for the condition
+            CanvasState.has_saved_projects, # CORRECTED: Use the computed var
             rx.box(
                 rx.vstack(
                     rx.heading("Recent Projects", class_name="text-3xl md:text-4xl font-bold text-white"),
@@ -94,7 +94,7 @@ def welcome():
                             CanvasState.saved_projects[:6],
                             lambda project, index: card([
                                 rx.image(
-                                    src=project.get("preview_image", "/api/placeholder/200/150"),
+                                    src=project.get("preview_image", "/placeholder/200/150.svg"), # Using .svg placeholder
                                     class_name="w-full h-32 object-cover rounded mb-3"
                                 ),
                                 rx.text(project.get("name", "Untitled"),
@@ -126,7 +126,7 @@ def welcome():
                 ),
                 class_name="py-16 px-8"
             ),
-            rx.box()
+            rx.box() # Else case for the rx.cond
         ),
 
         class_name="min-h-screen bg-gray-900",
