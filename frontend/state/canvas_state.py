@@ -2,7 +2,7 @@ import reflex as rx
 from typing import Any, Dict, List
 import random
 import json
-from .ui_components import toast
+from ..components.ui_components import toast
 
 initial_nodes = [
     {"id": "1", "type": "base_image", "data": {"label": "Base Image", "image": "", "edit": "none", "icon": "image", "width": 200, "height": 100}, "position": {"x": 100, "y": 50}},
