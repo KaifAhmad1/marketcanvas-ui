@@ -1,10 +1,9 @@
 # frontend/pages/editor.py
 import reflex as rx
-from ..components.enhanced_canvas import enhanced_toolbar, enhanced_canvas, properties_panel, layers_panel, ai_assistant_panel
+from ..components.enhanced_canvas import enhanced_toolbar, enhanced_canvas, properties_panel, layers_panel, ai_assistant_panel, live_preview_panel
 from ..components.ui_components import modal, primary_button, card
 from ..state.canvas_state import CanvasState
 
-# Helper function for modal content separation
 def _export_modal_content():
     return rx.vstack(
         rx.text("Format", size="2", weight="medium"),
@@ -56,14 +55,14 @@ def _export_modal_content():
             rx.button("Confirm Export", on_click=CanvasState.export_canvas, icon="download"),
             spacing="3", justify="end", width="100%", margin_top="1.5rem"
         ),
-        spacing="3" # Overall spacing in modal
+        spacing="3"
     )
 
 def export_modal_component():
     return modal(
         "Export Canvas",
         _export_modal_content(),
-        is_open=CanvasState.show_export_modal, # This must be a Var for control
+        is_open=CanvasState.show_export_modal,
         on_close=lambda: setattr(CanvasState, "show_export_modal", False),
         size="sm"
     )
@@ -81,7 +80,7 @@ def _ab_test_modal_content():
                             rx.vstack(
                                 rx.text(result.get("variant_name", "N/A"), weight="bold"),
                                 rx.text(rx.text.concat("Score: ", result.get("score_mock", 0).to_string()), size="1", color_scheme="gray"),
-                                # Add more result details if needed
+                                rx.text(rx.text.concat("Engagement: ", result.get("engagement_mock", 0).to_string()), size="1", color_scheme="gray"),
                                 align_items="start", spacing="1"
                             ),
                             spacing="3", align_items="center"
@@ -99,19 +98,18 @@ def ab_test_modal_component():
     return modal(
         "A/B Test Results",
         _ab_test_modal_content(),
-        is_open=CanvasState.show_ab_test_modal, # Must be a Var
+        is_open=CanvasState.show_ab_test_modal,
         on_close=lambda: setattr(CanvasState, "show_ab_test_modal", False),
         size="md"
     )
 
-
 def _tutorial_overlay_content():
-    # Example: Fetch current tutorial step's text from a predefined list or state
     tutorial_steps_text = {
         0: "Welcome! Click 'Base Image' in the toolbar to add your first node.",
         1: "Great! Now click 'Style' to add a style node and connect it to the image node.",
         2: "Connect an 'AI Gen' node. Configure its prompt and click 'Generate'!",
-        3: "Explore other nodes like 'Text' and 'Filter' to enhance your creation."
+        3: "Explore other nodes like 'Text' and 'Filter' to enhance your creation.",
+        4: "Use the Live Preview panel to adjust layers directly!"
     }
     current_step_text = tutorial_steps_text.get(CanvasState.tutorial_step, "You're doing great! Keep exploring.")
 
@@ -121,7 +119,7 @@ def _tutorial_overlay_content():
         rx.hstack(
             rx.button("Previous", on_click=CanvasState.prev_tutorial_step, disabled=CanvasState.tutorial_step == 0, variant="soft"),
             rx.button("Next", on_click=CanvasState.next_tutorial_step, icon="arrow-right"),
-            rx.flex(grow=1), # Spacer
+            rx.flex(grow=1),
             rx.button("End Tutorial", on_click=CanvasState.end_tutorial, variant="outline", color_scheme="gray"),
             spacing="3", width="100%"
         ),
@@ -130,9 +128,9 @@ def _tutorial_overlay_content():
 
 def tutorial_overlay_component():
     return rx.cond(
-        CanvasState.show_tutorial, # Must be a Var
-        rx.box( # Full screen overlay
-            rx.box( # Centered content box
+        CanvasState.show_tutorial,
+        rx.box(
+            rx.box(
                 _tutorial_overlay_content(),
                 class_name="bg-[var(--color-panel-solid)] border border-[var(--gray-a6)] rounded-lg p-6 max-w-lg shadow-2xl"
             ),
@@ -141,16 +139,6 @@ def tutorial_overlay_component():
     )
 
 def editor():
-    # Ensure UI control Vars are initialized if not already (e.g. in State __init__ or here for safety)
-    # This is a workaround if not using rx.Var(True) in State definition.
-    # It's better to define them as rx.Var in the State class directly.
-    # if not isinstance(CanvasState.show_properties_panel, rx.Var): CanvasState.show_properties_panel = rx.Var.create(True)
-    # if not isinstance(CanvasState.show_layers_panel, rx.Var): CanvasState.show_layers_panel = rx.Var.create(True)
-    # if not isinstance(CanvasState.show_export_modal, rx.Var): CanvasState.show_export_modal = rx.Var.create(False)
-    # if not isinstance(CanvasState.show_ab_test_modal, rx.Var): CanvasState.show_ab_test_modal = rx.Var.create(False)
-    # if not isinstance(CanvasState.show_tutorial, rx.Var): CanvasState.show_tutorial = rx.Var.create(False)
-
-
     return rx.box(
         export_modal_component(),
         ab_test_modal_component(),
@@ -163,23 +151,30 @@ def editor():
                 rx.vstack(
                     properties_panel(),
                     layers_panel(),
-                    spacing="0", # No space between panels
-                    width="320px", # Fixed width for left sidebar
+                    spacing="0",
+                    width="320px",
                     height="100%",
                     border_right="1px solid var(--gray-a5)"
                 ),
                 # Main Canvas Area
-                enhanced_canvas(), # Should be flex_grow=1
-                # Right Sidebar (AI Assistant)
-                ai_assistant_panel(), # Will take its own card width (w-80)
+                enhanced_canvas(),
+                # Right Sidebar (AI Assistant & Preview)
+                rx.vstack(
+                    live_preview_panel(),
+                    ai_assistant_panel(),
+                    spacing="4",
+                    width="320px",
+                    height="100%",
+                    border_left="1px solid var(--gray-a5)"
+                ),
                 spacing="0",
-                width="100%", # Occupy remaining width
-                height="calc(100vh - 70px)", # Adjust based on toolbar height
-                align_items="stretch" # Ensure children stretch vertically
+                width="100%",
+                height="calc(100vh - 70px)",
+                align_items="stretch"
             ),
             spacing="0",
-            width="100vw", # Full viewport width
-            height="100vh",# Full viewport height
+            width="100vw",
+            height="100vh",
             class_name="bg-[var(--gray-a1)] overflow-hidden flex flex-col"
         )
     )
