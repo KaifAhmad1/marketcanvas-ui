@@ -1,8 +1,11 @@
+# rxconfig.py
 import reflex as rx
 
-config = rx.Config(
-    app_name="frontend",
-    frontend_port=3000,
-    backend_port=8000,
-    api_url="http://localhost:8000",
-)
+class Config(rx.Config):
+    app_name = "frontend"
+    cors_allowed_origins = [
+        "http://localhost:3000",
+        "http://localhost:8000",
+    ]
+    
+config = Config()
