@@ -1,0 +1,55 @@
+{
+  "id": "template_social_ad_v1",
+  "name": "Social Media Ad Post",
+  "description": "Generate a background, upload a product, composite them, apply a style, and add ad copy.",
+  "category": "Social Media",
+  "thumbnail_url": "https://via.placeholder.com/150/8D99AE/FFFFFF?Text=SocialAd",
+  "workflow_payload": {
+    "nodes": [
+      {
+        "id": "bg_gen_ai",
+        "type": "textToImage",
+        "position": {"x": 50, "y": 100},
+        "data": {"label": "AI Background", "prompt": "Clean, modern product backdrop, soft studio lighting, minimalist", "provider": "fal_ai"}
+      },
+      {
+        "id": "prod_upload",
+        "type": "imageUpload",
+        "position": {"x": 50, "y": 300},
+        "data": {"label": "Upload Your Product"}
+      },
+      {
+        "id": "composite_node",
+        "type": "productInScene",
+        "position": {"x": 350, "y": 200},
+        "data": {"label": "Composite Images", "prompt": "Place the product naturally on the generated background, ensure realistic shadows and scale."}
+      },
+      {
+        "id": "style_node",
+        "type": "styleApply",
+        "position": {"x": 600, "y": 200},
+        "data": {"label": "Vibrant Style", "style_mode": "preset", "style_preset_id": "style_vibrant_hd", "intensity": 0.65}
+      },
+      {
+        "id": "text_overlay_node",
+        "type": "textOverlay",
+        "position": {"x": 850, "y": 200},
+        "data": {"label": "Ad Copy", "text_content": "SALE! 50% OFF", "font_size": 72, "font_color": "#FFFFFF", "text_y_position_percent": 80, "background_color": "#E53E3E99"}
+      },
+      {
+        "id": "output_final",
+        "type": "outputNode",
+        "position": {"x": 1100, "y": 200},
+        "data": {"label": "Final Ad Visual"}
+      }
+    ],
+    "edges": [
+      {"id": "e_bg_comp", "source": "bg_gen_ai", "target": "composite_node", "targetHandle": "base_image_in"},
+      {"id": "e_prod_comp", "source": "prod_upload", "target": "composite_node", "targetHandle": "product_image_in"},
+      {"id": "e_comp_style", "source": "composite_node", "target": "style_node"},
+      {"id": "e_style_text", "source": "style_node", "target": "text_overlay_node"},
+      {"id": "e_text_out", "source": "text_overlay_node", "target": "output_final"}
+    ],
+    "api_keys": null
+  }
+}
